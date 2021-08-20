@@ -38,7 +38,7 @@ define('RCGUARD_RECAPTCHA_FAILURE', 1);
 
 class rcguard extends rcube_plugin
 {
-    public $task = 'login';
+    public $task = 'login|logout';
     private $table_name;
     private $rc;
 
@@ -105,8 +105,15 @@ class rcguard extends rcube_plugin
         return $this->show_recaptcha($loginform);
     }
 
-    public function authenticate($args)
+    public function authenticate($args, $rc = null, $table_name = null)
     {
+        if ($rc) {
+            $this->rc = $rc;
+        }
+        if ($table_name) {
+            $this->table_name = $table_name;
+        }
+
         $rcmail = rcmail::get_instance();
 
         $client_ip = $this->get_client_ip();
